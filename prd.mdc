@@ -1,0 +1,128 @@
+15년 차 기획자님의 통찰력 있는 설계를 바탕으로, \*\*Google Antigravity(Gemini 3.0)\*\*가 단 한 번의 실행으로 기획 의도를 완벽하게 이해하고 UI를 그려낼 수 있는 \*\*[초기 세팅용 프롬프트(Boilerplate Prompt)]\*\*를 준비했습니다.
+
+이 프롬프트는 단순히 "대시보드를 만들어줘"가 아니라, **우리가 정의한 데이터 구조(DB, Git, Web/App 분기)를 코드 안에 심어서** 구조적인 변경 없이 바로 사용할 수 있도록 최적화했습니다.
+
+아래 내용을 복사해서 Antigravity 입력창에 그대로 붙여넣으시면 됩니다.
+
+-----
+
+### 🏗️ Google Antigravity용 마스터 프롬프트 (Copy & Paste)
+
+```markdown
+# Role
+너는 구글의 Material Design 3 원칙을 완벽하게 이해하고 있는 수석 프론트엔드 개발자야.
+나는 서비스 기획자이고, 우리는 지금부터 기획자가 개발 전 과정을 체크할 수 있는 'Vibe Pilot Dashboard'를 만들 거야.
+
+# Tech Stack
+- React (Functional Components, Hooks)
+- Tailwind CSS (Styling)
+- Lucide React (Icons)
+
+# Design Concept (Google Opal Style)
+- **Layout:** 상단에는 현재 진행 단계를 보여주는 가로형 Stepper(프로세스 바), 하단에는 해당 단계의 상세 내용을 담은 Card UI가 위치함.
+- **Color:** 구글 스타일의 파스텔 톤 배경, 명확한 Primary Color(Blue/Google Blue), 둥근 모서리(Rounded-xl).
+- **Interaction:** 체크리스트를 완료하면 진행률(Progress bar)이 차오르고, 단계가 완료되면 다음 단계가 활성화됨.
+
+# Data Structure (매우 중요: 이 데이터를 기반으로 UI를 렌더링할 것)
+우리의 프로젝트는 'Web'과 'App' 두 가지 모드가 있어. 아래 JSON 구조를 상태(State)로 관리해서 화면을 구성해줘.
+
+const steps = [
+  {
+    id: 1,
+    title: "Platform",
+    description: "서비스 형태 및 하드웨어 제어 범위 정의",
+    isCompleted: false,
+    items: [
+      { id: "p1", text: "서비스 타입 선택 (Web vs App)", type: "select", options: ["Web Service", "Mobile App"] },
+      { id: "p2", text: "핵심 기능 정의 (카메라, 위치, 푸시 등)", type: "checkbox" },
+      // Web 선택 시: "PWA 지원 여부", "SEO 전략" 표시
+      // App 선택 시: "스토어 계정(Apple/Google)", "심사 가이드라인" 표시
+    ]
+  },
+  {
+    id: 2,
+    title: "Resource",
+    description: "DB, API, 환경 변수 설정",
+    isCompleted: false,
+    items: [
+      { id: "r1", text: "데이터베이스 결정 (Firebase / Supabase / Local)", type: "checkbox" },
+      { id: "r2", text: "Google Cloud Console 프로젝트 생성", type: "checkbox" },
+      { id: "r3", text: "API Key 발급 및 Quota(한도) 설정", type: "checkbox" },
+      { id: "r4", text: ".env 파일 생성 및 보안 처리", type: "checkbox" }
+    ]
+  },
+  {
+    id: 3,
+    title: "Dev & Git",
+    description: "형상 관리 및 개발 환경",
+    isCompleted: false,
+    items: [
+      { id: "d1", text: "GitHub Repository 생성 및 연동", type: "checkbox" },
+      { id: "d2", text: ".gitignore 설정 (API Key 유출 방지)", type: "checkbox" },
+      { id: "d3", text: "기본 폴더 구조 (Components, Utils) 구성", type: "checkbox" }
+    ]
+  },
+  {
+    id: 4,
+    title: "Launch",
+    description: "배포 및 운영 준비",
+    isCompleted: false,
+    items: [
+      { id: "l1", text: "Staging/Production 도메인 연결", type: "checkbox" },
+      { id: "l2", text: "SSL 인증서(https) 적용", type: "checkbox" },
+      { id: "l3", text: "에러 모니터링 연동 (Sentry 등)", type: "checkbox" }
+    ]
+  }
+];
+
+# Functional Requirements
+1. **Phase Navigation:** 상단의 1~4단계 탭을 클릭하여 내용을 전환할 수 있어야 함.
+2. **Check Logic:** 체크박스를 클릭하면 해당 항목이 완료(Done) 처리되고, 전체 진행률(%)이 상단에 표시되어야 함.
+3. **Dynamic UI:** 1단계에서 'Web Service'를 선택했는지 'Mobile App'을 선택했는지에 따라, 하단의 경고 문구(예: "웹에서는 백그라운드 위치 추적이 불가능합니다")를 띄워주는 Alert 컴포넌트를 추가해줘.
+4. **Dashboard View:** 전체적으로 깔끔하고 직관적인 대시보드 형태로 코드를 작성해줘.
+
+# Project Status Board (Overview)
+* **목적:** 프로젝트의 전체 진척률과 단계별 병목 구간을 한눈에 파악 (Executive View).
+* **주요 기능:**
+  1.  **Total Progress:** 전체 프로젝트 완료율 (%) 시각화.
+  2.  **Phase Summary Cards:** 4개 단계(Platform, Resource, Dev, Launch)의 상태를 카드 형태로 요약.
+        * *예: Platform (완료), Resource (진행 중 1/3), Dev (대기), Launch (대기)*
+  3.  **Status Indicators:** 정상(Green), 지연(Red), 진행 중(Blue) 색상 코딩.
+* **UX Flow:**
+    * 메인 화면 진입 시 '현황판'이 먼저 노출됨.
+    * 각 단계 카드를 클릭하면, 기존의 '상세 체크리스트(Stepper)' 화면으로 이동하여 작업 수행.
+
+# Checklist Management (CRUD)
+* **목적:** 사용자가 프로젝트 상황에 맞춰 체크리스트 항목을 자유롭게 커스터마이징할 수 있도록 함.
+* **주요 기능:**
+  1.  **Add Item:** 각 단계(Phase) 하단에 새로운 체크리스트 항목을 추가하는 기능.
+  2.  **Edit Item:** 기존 항목의 텍스트를 수정하는 기능.
+  3.  **Delete Item:** 불필요한 항목을 삭제하는 기능.
+* **제약 사항:**
+  * 기본 제공되는 핵심 항목(Select 등)은 삭제 불가능하게 처리하거나 경고 표시. (이번 버전에서는 자유롭게 허용하되, Select 타입은 유지 권장)
+  * 데이터는 LocalStorage에 저장되어 유지되어야 함.
+
+지금 바로 실행 가능한 전체 코드를 작성해.
+```
+
+-----
+
+### 💡 기획자 팁: 이 프롬프트의 작동 원리
+
+1.  **데이터 주도형 설계 (Data-Driven):**
+      * 프롬프트 중간의 `Data Structure` 부분에 JSON 형태의 데이터를 직접 넣어주었습니다. 이렇게 하면 AI가 마음대로 내용을 지어내지 않고, 기획자님이 고민하신 **'배포, DB, Git'** 등의 핵심 키워드를 정확히 화면에 박아넣습니다.
+2.  **동적 UI 요청 (Web vs App):**
+      * `Functional Requirements` 3번 항목을 통해, 서비스 타입 선택에 따라 다른 가이드를 주도록 명시했습니다. 이는 기획자가 가장 많이 놓치는 '플랫폼 제약'을 시각적으로 경고하기 위함입니다.
+3.  **디자인 시스템 지정 (Opal/Material):**
+      * 구글 Antigravity는 구글의 디자인 언어를 가장 잘 이해합니다. 'Google Opal Style'이라고 명시함으로써 촌스럽지 않고 전문가스러운 UI를 한 번에 뽑아낼 수 있습니다.
+
+-----
+
+### Next Step (서비스 기획자의 다음 수)
+
+이 코드가 생성되고 나면 화면이 뜰 것입니다. 하지만 화면은 정적일 수 있습니다.
+실제로 **GitHub와 연동**되거나 **진행 상황을 저장**하려면 다음 단계가 필요합니다.
+
+**"생성된 대시보드 화면에서, 각 체크리스트를 클릭했을 때 실제로 진행률이 저장되고, 브라우저를 껐다 켜도 상태가 유지되도록 'Local Storage' 저장 기능을 추가해 달라고 할까요?"**
+
+이 기능을 추가하면 별도의 DB 없이도 나만의 '프로젝트 관리 도구'로 바로 사용하실 수 있습니다.
