@@ -208,6 +208,54 @@ function AppContent() {
     localStorage.setItem('vibe-pilot-project-info', JSON.stringify(projectInfo));
   }, [projectInfo]);
 
+  // Export data as JSON
+  const exportData = () => {
+    const dataToExport = {
+      version: '1.0.0',
+      exportedAt: new Date().toISOString(),
+      projectInfo: projectInfo,
+      steps: steps
+    };
+
+    const jsonString = JSON.stringify(dataToExport, null, 2);
+    const blob = new Blob([jsonString], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement('a');
+    link.href = url;
+    const fileName = `vibe-pilot-backup-${new Date().toISOString().split('T')[0]}.json`;
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+
+    return fileName;
+  };
+
+  // Import data from JSON
+  const importData = (jsonData) => {
+    try {
+      // Validate JSON structure
+      if (!jsonData.steps || !jsonData.projectInfo) {
+        throw new Error('Invalid data structure');
+      }
+
+      // Update states
+      setSteps(jsonData.steps);
+      setProjectInfo(jsonData.projectInfo);
+
+      // Also update localStorage immediately
+      localStorage.setItem('vibe-pilot-steps-v9', JSON.stringify(jsonData.steps));
+      localStorage.setItem('vibe-pilot-project-info', JSON.stringify(jsonData.projectInfo));
+
+      return true;
+    } catch (error) {
+      console.error('Import error:', error);
+      return false;
+    }
+  };
+
   const handleStepClick = (id) => {
     setCurrentStepId(id);
     setCurrentView('workflow');
@@ -343,6 +391,8 @@ function AppContent() {
       totalProgress={totalProgress}
       projectInfo={projectInfo}
       onUpdateProjectInfo={setProjectInfo}
+      onExportData={exportData}
+      onImportData={importData}
     >
       {currentView === 'overview' ? (
         <Overview

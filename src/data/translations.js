@@ -7,6 +7,22 @@ export const translations = {
             programInfo: "Program Info",
             info: "Info"
         },
+        header: {
+            export: "Export Data",
+            import: "Import Data",
+            exportSuccess: "Data exported successfully!",
+            importSuccess: "Data imported successfully!",
+            importConfirm: "Import will overwrite current data. Continue?",
+            importError: "Invalid file format. Please upload a valid JSON file.",
+            cloudSave: "Save to Cloud",
+            cloudLoad: "Load from Cloud",
+            cloudSaveSuccess: "Data saved to cloud!",
+            cloudLoadSuccess: "Data loaded from cloud!",
+            projectId: "Project ID",
+            projectIdPlaceholder: "Enter project ID (e.g., myproject-abc123)",
+            generateId: "Generate ID",
+            shareLink: "Share Link"
+        },
         overview: {
             title: "Project Status Board",
             totalProgress: "Total Progress",
@@ -181,6 +197,22 @@ export const translations = {
             checklist: "상세 체크리스트",
             programInfo: "프로그램 정보",
             info: "정보"
+        },
+        header: {
+            export: "데이터 내보내기",
+            import: "데이터 가져오기",
+            exportSuccess: "데이터를 성공적으로 내보냈습니다!",
+            importSuccess: "데이터를 성공적으로 가져왔습니다!",
+            importConfirm: "가져오기 하면 현재 데이터를 덮어씁니다. 계속하시겠습니까?",
+            importError: "잘못된 파일 형식입니다. 올바른 JSON 파일을 업로드하세요.",
+            cloudSave: "클라우드에 저장",
+            cloudLoad: "클라우드에서 불러오기",
+            cloudSaveSuccess: "클라우드에 저장되었습니다!",
+            cloudLoadSuccess: "클라우드에서 불러왔습니다!",
+            projectId: "프로젝트 ID",
+            projectIdPlaceholder: "프로젝트 ID 입력 (예: myproject-abc123)",
+            generateId: "ID 생성",
+            shareLink: "공유 링크"
         },
         overview: {
             title: "프로젝트 현황판",

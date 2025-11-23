@@ -1,16 +1,55 @@
 import React, { useState } from 'react';
-import { Menu, BookOpen, Globe, Rocket, Settings } from 'lucide-react';
+import { Menu, BookOpen, Globe, Rocket, Settings, Download, Upload, Save } from 'lucide-react';
 import Sidebar from './Sidebar';
 import NavContent from './NavContent';
 import ProgramInfoModal from './ProgramInfoModal';
 import ProjectRegistrationModal from './ProjectRegistrationModal';
 import { useLanguage } from '../contexts/LanguageContext';
 
-const DashboardLayout = ({ children, currentView, onSwitchView, totalProgress, projectInfo, onUpdateProjectInfo }) => {
+const DashboardLayout = ({ children, currentView, onSwitchView, totalProgress, projectInfo, onUpdateProjectInfo, onExportData, onImportData }) => {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isInfoOpen, setIsInfoOpen] = useState(false);
     const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
     const { language, toggleLanguage, t } = useLanguage();
+
+    const handleExport = () => {
+        const fileName = onExportData();
+        alert(t('header.exportSuccess') + `\n${fileName}`);
+    };
+
+    const handleImport = () => {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.json';
+
+        input.onchange = (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            // Confirm overwrite
+            if (!confirm(t('header.importConfirm'))) return;
+
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                try {
+                    const jsonData = JSON.parse(event.target.result);
+                    const success = onImportData(jsonData);
+
+                    if (success) {
+                        alert(t('header.importSuccess'));
+                        window.location.reload(); // Refresh to show updated data
+                    } else {
+                        alert(t('header.importError'));
+                    }
+                } catch (error) {
+                    alert(t('header.importError'));
+                }
+            };
+            reader.readAsText(file);
+        };
+
+        input.click();
+    };
 
     return (
         <div className="min-h-screen bg-[#F9FAFB] flex font-sans text-slate-800">
@@ -79,6 +118,15 @@ const DashboardLayout = ({ children, currentView, onSwitchView, totalProgress, p
                     </button>
 
                     <button
+                        onClick={handleExport}
+                        className="flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-full shadow-sm text-sm font-medium hover:bg-emerald-700 transition-all"
+                        title={t('header.export')}
+                    >
+                        <Save size={16} />
+                        <span>현재사항 저장</span>
+                    </button>
+
+                    <button
                         onClick={toggleLanguage}
                         className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-full shadow-sm text-sm font-medium text-slate-600 hover:text-indigo-600 hover:border-indigo-200 transition-all"
                     >
@@ -91,6 +139,22 @@ const DashboardLayout = ({ children, currentView, onSwitchView, totalProgress, p
                     >
                         <BookOpen size={16} />
                         <span>{t('nav.programInfo')}</span>
+                    </button>
+                    <button
+                        onClick={handleExport}
+                        className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-full shadow-sm text-sm font-medium text-slate-600 hover:text-emerald-600 hover:border-emerald-200 transition-all"
+                        title={t('header.export')}
+                    >
+                        <Download size={16} />
+                        <span>{t('header.export')}</span>
+                    </button>
+                    <button
+                        onClick={handleImport}
+                        className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-full shadow-sm text-sm font-medium text-slate-600 hover:text-blue-600 hover:border-blue-200 transition-all"
+                        title={t('header.import')}
+                    >
+                        <Upload size={16} />
+                        <span>{t('header.import')}</span>
                     </button>
                 </div>
 
@@ -108,11 +172,29 @@ const DashboardLayout = ({ children, currentView, onSwitchView, totalProgress, p
                         <span>{projectInfo?.status === 'active' ? t('project.settings') : t('project.register')}</span>
                     </button>
                     <button
+                        onClick={handleExport}
+                        className="flex items-center gap-2 px-3 py-1.5 bg-emerald-600 text-white rounded-full shadow-sm text-xs font-medium"
+                    >
+                        <Save size={14} />
+                    </button>
+                    <button
                         onClick={() => setIsInfoOpen(true)}
                         className="flex items-center gap-2 px-3 py-1.5 bg-white border border-slate-200 rounded-full shadow-sm text-xs font-medium text-slate-600 hover:text-indigo-600 transition-all"
                     >
                         <BookOpen size={14} />
                         <span>{t('nav.info')}</span>
+                    </button>
+                    <button
+                        onClick={handleExport}
+                        className="flex items-center gap-2 px-3 py-1.5 bg-white border border-slate-200 rounded-full shadow-sm text-xs font-medium text-slate-600"
+                    >
+                        <Download size={14} />
+                    </button>
+                    <button
+                        onClick={handleImport}
+                        className="flex items-center gap-2 px-3 py-1.5 bg-white border border-slate-200 rounded-full shadow-sm text-xs font-medium text-slate-600"
+                    >
+                        <Upload size={14} />
                     </button>
                 </div>
 
