@@ -1,7 +1,14 @@
 {
-  "name": "app",
+  "name": "vibe-pilot",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "Smart checklist dashboard for managing service development from planning to launch",
+  "author": "k1300k",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/k1300k/newday.git"
+  },
   "type": "module",
   "scripts": {
     "dev": "vite",

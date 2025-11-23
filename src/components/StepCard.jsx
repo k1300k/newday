@@ -28,7 +28,7 @@ const StepCard = ({ step, onToggleItem, onSelectOption, onAddItem, onUpdateItem,
 
     const saveEditing = (itemId) => {
         if (editValue.trim()) {
-            onUpdateItem(step.id, itemId, { text: editValue, textKey: null }); // Clear textKey if edited
+            onUpdateItem(step.id, itemId, { text: editValue, textKey: null });
             setEditingId(null);
         }
     };
@@ -85,7 +85,6 @@ const StepCard = ({ step, onToggleItem, onSelectOption, onAddItem, onUpdateItem,
         });
     };
 
-    // Determine platform for alerts (only for step 1)
     const platformItem = step.id === 1 ? step.items.find(i => i.id === 'p1') : null;
     const platform = platformItem?.value;
 
@@ -103,7 +102,6 @@ const StepCard = ({ step, onToggleItem, onSelectOption, onAddItem, onUpdateItem,
             <div className="space-y-4">
                 {step.items.map((item) => (
                     <div key={item.id} className="group bg-white rounded-lg border border-slate-200 transition-all hover:border-indigo-300 hover:shadow-sm overflow-hidden">
-                        {/* Item Header */}
                         <div className={`p-4 flex items-start gap-3 ${item.checked ? 'bg-slate-50' : ''}`}>
                             {item.type !== 'percentage' && (
                                 <button
@@ -139,15 +137,14 @@ const StepCard = ({ step, onToggleItem, onSelectOption, onAddItem, onUpdateItem,
                                                 </span>
                                                 {item.grade && (
                                                     <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded border uppercase tracking-wider
-                                                        ${item.grade === 'Basic' ? 'bg-blue-50 text-blue-600 border-blue-100' : 'bg-purple-50 text-purple-600 border-purple-100'}
-                                                    `}>
+                            ${item.grade === 'Basic' ? 'bg-blue-50 text-blue-600 border-blue-100' : 'bg-purple-50 text-purple-600 border-purple-100'}
+                          `}>
                                                         {t(`grades.${item.grade}`)}
                                                     </span>
                                                 )}
                                             </div>
                                         )}
 
-                                        {/* Type Specific Controls */}
                                         {item.type === 'select' && !editingId && (
                                             <div className="flex flex-wrap gap-2 mt-2">
                                                 {item.options.map((option) => (
@@ -155,12 +152,12 @@ const StepCard = ({ step, onToggleItem, onSelectOption, onAddItem, onUpdateItem,
                                                         key={option}
                                                         onClick={() => onSelectOption(step.id, item.id, option)}
                                                         className={`px-3 py-1 text-xs font-medium rounded-full border transition-all
-                                                            ${item.value === option
+                              ${item.value === option
                                                                 ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm'
                                                                 : 'bg-white text-slate-600 border-slate-200 hover:border-indigo-300'}
-                                                        `}
+                            `}
                                                     >
-                                                        {option}
+                                                        {t(`options.${option}`) || option}
                                                     </button>
                                                 ))}
                                             </div>
@@ -184,7 +181,6 @@ const StepCard = ({ step, onToggleItem, onSelectOption, onAddItem, onUpdateItem,
                                         )}
                                     </div>
 
-                                    {/* Actions */}
                                     <div className="flex items-center gap-1 ml-2">
                                         {item.refLink && (
                                             <a
@@ -192,7 +188,7 @@ const StepCard = ({ step, onToggleItem, onSelectOption, onAddItem, onUpdateItem,
                                                 target="_blank"
                                                 rel="noopener noreferrer"
                                                 className="p-1.5 text-slate-400 hover:text-blue-500 hover:bg-blue-50 rounded-md transition-colors"
-                                                title={t('checklist.reference') || "Reference / Example"}
+                                                title={item.refLink.titleKey ? t(item.refLink.titleKey) : (item.refLink.title || t('checklist.reference'))}
                                             >
                                                 <BookOpen size={14} />
                                             </a>
@@ -218,8 +214,8 @@ const StepCard = ({ step, onToggleItem, onSelectOption, onAddItem, onUpdateItem,
                                         <button
                                             onClick={() => toggleExpand(item.id)}
                                             className={`p-1.5 rounded-md transition-colors flex items-center gap-1
-                                                ${expandedItemId === item.id ? 'bg-indigo-50 text-indigo-600' : 'text-slate-400 hover:bg-slate-100 hover:text-slate-600'}
-                                            `}
+                        ${expandedItemId === item.id ? 'bg-indigo-50 text-indigo-600' : 'text-slate-400 hover:bg-slate-100 hover:text-slate-600'}
+                      `}
                                             title="Deliverables"
                                         >
                                             {(item.deliverables?.meetingNotes || item.deliverables?.prompts || item.deliverables?.githubLinks?.length > 0) && (
@@ -230,93 +226,178 @@ const StepCard = ({ step, onToggleItem, onSelectOption, onAddItem, onUpdateItem,
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                        {/* Deliverables Section (Expanded) */}
-                        {expandedItemId === item.id && (
-                            <div className="border-t border-slate-100 bg-slate-50/50 p-4 space-y-4 animate-fade-in">
-                                <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">{t('deliverables.title')}</h4>
+                            {expandedItemId === item.id && (
+                                <div className="border-t border-slate-100 bg-slate-50/50 p-4 space-y-4 animate-fade-in">
+                                    {item.guide && (
+                                        <div className="bg-blue-50/50 border border-blue-100 rounded-lg p-3 mb-4">
+                                            <h4 className="text-xs font-bold text-blue-600 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                                                <BookOpen size={12} />
+                                                {t('checklist.guideTitle') || "Usage Examples"}
+                                            </h4>
+                                            <p className="text-sm text-slate-700 mb-3 leading-relaxed">
+                                                {item.guide.descKey ? t(item.guide.descKey) : item.guide.desc}
+                                            </p>
+                                            {item.guide.links && item.guide.links.length > 0 && (
+                                                <div className="flex flex-wrap gap-2">
+                                                    {item.guide.links.map((link, idx) => (
+                                                        <a
+                                                            key={idx}
+                                                            href={link.url}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            className="inline-flex items-center gap-1 text-xs font-medium text-blue-600 bg-white px-2 py-1 rounded border border-blue-200 hover:bg-blue-50 transition-colors"
+                                                        >
+                                                            <LinkIcon size={10} />
+                                                            {link.text}
+                                                        </a>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
 
-                                {/* Meeting Notes */}
-                                <div>
-                                    <label className="block text-xs font-bold text-slate-700 mb-1.5 flex items-center gap-1.5">
-                                        <FileText size={14} className="text-indigo-500" />
-                                        {t('deliverables.meetingNotes')}
-                                    </label>
-                                    <textarea
-                                        value={item.deliverables?.meetingNotes || ''}
-                                        onChange={(e) => handleDeliverableChange(item.id, 'meetingNotes', e.target.value)}
-                                        placeholder={t('deliverables.placeholderNotes')}
-                                        className="w-full p-3 text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none resize-none h-24 bg-white"
-                                    />
-                                </div>
+                                    <div className="mb-6">
+                                        <label className="flex items-center gap-2 cursor-pointer mb-3">
+                                            <input
+                                                type="checkbox"
+                                                checked={item.type === 'percentage'}
+                                                onChange={(e) => {
+                                                    const isEnabled = e.target.checked;
+                                                    onUpdateItem(step.id, item.id, {
+                                                        type: isEnabled ? 'percentage' : 'checkbox',
+                                                        value: isEnabled ? (item.value || 0) : null
+                                                    });
+                                                }}
+                                                className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                                            />
+                                            <span className="text-sm font-bold text-slate-700">{t('checklist.progressTitle') || "Progress Management"}</span>
+                                        </label>
 
-                                {/* Prompts */}
-                                <div>
-                                    <label className="block text-xs font-bold text-slate-700 mb-1.5 flex items-center gap-1.5">
-                                        <Bot size={14} className="text-purple-500" />
-                                        {t('deliverables.prompts')}
-                                    </label>
-                                    <textarea
-                                        value={item.deliverables?.prompts || ''}
-                                        onChange={(e) => handleDeliverableChange(item.id, 'prompts', e.target.value)}
-                                        placeholder={t('deliverables.placeholderPrompts')}
-                                        className="w-full p-3 text-sm font-mono border border-slate-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none resize-none h-24 bg-slate-900 text-slate-200"
-                                    />
-                                </div>
-
-                                {/* GitHub Links */}
-                                <div>
-                                    <label className="block text-xs font-bold text-slate-700 mb-1.5 flex items-center gap-1.5">
-                                        <Github size={14} className="text-slate-800" />
-                                        {t('deliverables.githubLinks')}
-                                    </label>
-
-                                    {/* Link List */}
-                                    <div className="space-y-2 mb-3">
-                                        {(item.deliverables?.githubLinks || []).map((link, idx) => (
-                                            <div key={idx} className="flex items-center gap-2 bg-white p-2 rounded border border-slate-200 text-sm">
-                                                <LinkIcon size={14} className="text-slate-400 shrink-0" />
-                                                <a href={link.url} target="_blank" rel="noopener noreferrer" className="flex-1 text-indigo-600 hover:underline truncate">
-                                                    {link.desc || link.url}
-                                                </a>
-                                                <button onClick={() => removeGithubLink(item.id, idx)} className="text-slate-400 hover:text-rose-500 p-1">
-                                                    <X size={14} />
-                                                </button>
+                                        {item.type === 'percentage' && (
+                                            <div className="bg-white p-3 rounded-lg border border-slate-200 shadow-sm">
+                                                <div className="flex items-center gap-3 mb-2">
+                                                    <div className="flex-1">
+                                                        <input
+                                                            type="range"
+                                                            min="0"
+                                                            max="100"
+                                                            value={item.value || 0}
+                                                            onChange={(e) => {
+                                                                const val = parseInt(e.target.value, 10);
+                                                                onUpdateItem(step.id, item.id, {
+                                                                    value: val,
+                                                                    checked: val === 100
+                                                                });
+                                                            }}
+                                                            className="w-full h-2 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-indigo-600"
+                                                        />
+                                                    </div>
+                                                    <div className="flex items-center gap-1 bg-slate-50 px-2 py-1 rounded border border-slate-200">
+                                                        <input
+                                                            type="number"
+                                                            min="0"
+                                                            max="100"
+                                                            value={item.value || 0}
+                                                            onChange={(e) => {
+                                                                let val = parseInt(e.target.value, 10);
+                                                                if (isNaN(val)) val = 0;
+                                                                if (val > 100) val = 100;
+                                                                if (val < 0) val = 0;
+                                                                onUpdateItem(step.id, item.id, {
+                                                                    value: val,
+                                                                    checked: val === 100
+                                                                });
+                                                            }}
+                                                            className="w-12 text-right bg-transparent text-sm font-bold text-indigo-600 outline-none"
+                                                        />
+                                                        <span className="text-xs text-slate-500">%</span>
+                                                    </div>
+                                                </div>
+                                                <p className="text-xs text-slate-400 text-center">
+                                                    {item.value === 100 ? "Completed!" : "Slide to 100% to complete"}
+                                                </p>
                                             </div>
-                                        ))}
-                                        {(!item.deliverables?.githubLinks || item.deliverables.githubLinks.length === 0) && (
-                                            <p className="text-xs text-slate-400 italic">{t('deliverables.noLinks')}</p>
                                         )}
                                     </div>
 
-                                    {/* Add Link Form */}
-                                    <form
-                                        onSubmit={(e) => {
-                                            e.preventDefault();
-                                            const url = e.target.url.value;
-                                            const desc = e.target.desc.value;
-                                            if (url) {
-                                                addGithubLink(item.id, url, desc);
-                                                e.target.reset();
-                                            }
-                                        }}
-                                        className="flex gap-2"
-                                    >
-                                        <input name="url" type="url" placeholder={t('deliverables.linkUrl')} className="flex-1 px-2 py-1.5 text-sm border border-slate-200 rounded focus:ring-2 focus:ring-indigo-500 outline-none" required />
-                                        <input name="desc" type="text" placeholder={t('deliverables.linkDesc')} className="flex-1 px-2 py-1.5 text-sm border border-slate-200 rounded focus:ring-2 focus:ring-indigo-500 outline-none" />
-                                        <button type="submit" className="px-3 py-1.5 bg-slate-800 text-white text-xs font-bold rounded hover:bg-slate-700 transition-colors">
-                                            {t('deliverables.addLink')}
-                                        </button>
-                                    </form>
+                                    <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">{t('deliverables.title')}</h4>
+
+                                    <div>
+                                        <label className="block text-xs font-bold text-slate-700 mb-1.5 flex items-center gap-1.5">
+                                            <FileText size={14} className="text-indigo-500" />
+                                            {t('deliverables.meetingNotes')}
+                                        </label>
+                                        <textarea
+                                            value={item.deliverables?.meetingNotes || ''}
+                                            onChange={(e) => handleDeliverableChange(item.id, 'meetingNotes', e.target.value)}
+                                            placeholder={t('deliverables.placeholderNotes')}
+                                            className="w-full p-3 text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none resize-none h-24 bg-white"
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-xs font-bold text-slate-700 mb-1.5 flex items-center gap-1.5">
+                                            <Bot size={14} className="text-purple-500" />
+                                            {t('deliverables.prompts')}
+                                        </label>
+                                        <textarea
+                                            value={item.deliverables?.prompts || ''}
+                                            onChange={(e) => handleDeliverableChange(item.id, 'prompts', e.target.value)}
+                                            placeholder={t('deliverables.placeholderPrompts')}
+                                            className="w-full p-3 text-sm font-mono border border-slate-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none resize-none h-24 bg-slate-900 text-slate-200"
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-xs font-bold text-slate-700 mb-1.5 flex items-center gap-1.5">
+                                            <Github size={14} className="text-slate-800" />
+                                            {t('deliverables.githubLinks')}
+                                        </label>
+
+                                        <div className="space-y-2 mb-3">
+                                            {(item.deliverables?.githubLinks || []).map((link, idx) => (
+                                                <div key={idx} className="flex items-center gap-2 bg-white p-2 rounded border border-slate-200 text-sm">
+                                                    <LinkIcon size={14} className="text-slate-400 shrink-0" />
+                                                    <a href={link.url} target="_blank" rel="noopener noreferrer" className="flex-1 text-indigo-600 hover:underline truncate">
+                                                        {link.desc || link.url}
+                                                    </a>
+                                                    <button onClick={() => removeGithubLink(item.id, idx)} className="text-slate-400 hover:text-rose-500 p-1">
+                                                        <X size={14} />
+                                                    </button>
+                                                </div>
+                                            ))}
+                                            {(!item.deliverables?.githubLinks || item.deliverables.githubLinks.length === 0) && (
+                                                <p className="text-xs text-slate-400 italic">{t('deliverables.noLinks')}</p>
+                                            )}
+                                        </div>
+
+                                        <form
+                                            onSubmit={(e) => {
+                                                e.preventDefault();
+                                                const url = e.target.url.value;
+                                                const desc = e.target.desc.value;
+                                                if (url) {
+                                                    addGithubLink(item.id, url, desc);
+                                                    e.target.reset();
+                                                }
+                                            }}
+                                            className="flex gap-2"
+                                        >
+                                            <input name="url" type="url" placeholder={t('deliverables.linkUrl')} className="flex-1 px-2 py-1.5 text-sm border border-slate-200 rounded focus:ring-2 focus:ring-indigo-500 outline-none" required />
+                                            <input name="desc" type="text" placeholder={t('deliverables.linkDesc')} className="flex-1 px-2 py-1.5 text-sm border border-slate-200 rounded focus:ring-2 focus:ring-indigo-500 outline-none" />
+                                            <button type="submit" className="px-3 py-1.5 bg-slate-800 text-white text-xs font-bold rounded hover:bg-slate-700 transition-colors">
+                                                {t('deliverables.addLink')}
+                                            </button>
+                                        </form>
+                                    </div>
                                 </div>
-                            </div>
-                        )}
+                            )}
+                        </div>
                     </div>
                 ))}
             </div>
 
-            {/* Add Item Button */}
             {isAdding ? (
                 <form onSubmit={handleAddItemSubmit} className="mt-4 p-4 bg-slate-50 rounded-lg border border-slate-300 border-dashed">
                     <div className="flex items-center gap-2 mb-3">
@@ -374,20 +455,19 @@ const StepCard = ({ step, onToggleItem, onSelectOption, onAddItem, onUpdateItem,
                 </button>
             )}
 
-            {/* Conditional Alerts based on Step 1 Selection */}
             {step.id === 1 && platform && (
                 <div className={`mt-8 p-4 rounded-lg flex items-start gap-3 animate-fade-in border
-                  ${platform === 'Web Service' ? 'bg-amber-50 text-amber-900 border-amber-200' : 'bg-indigo-50 text-indigo-900 border-indigo-200'}
-                `}>
+          ${platform === 'web' ? 'bg-amber-50 text-amber-900 border-amber-200' : 'bg-indigo-50 text-indigo-900 border-indigo-200'}
+        `}>
                     <AlertCircle size={20} className="shrink-0 mt-0.5" />
                     <div>
                         <h4 className="font-bold text-sm mb-1">
-                            {platform === 'Web Service' ? 'Web Service Notice' : 'Mobile App Notice'}
+                            {platform === 'web' ? t('alerts.webTitle') : t('alerts.appTitle')}
                         </h4>
                         <p className="text-xs opacity-90 leading-relaxed">
-                            {platform === 'Web Service'
-                                ? '웹에서는 백그라운드 위치 추적이 불가능합니다. PWA 지원 여부와 SEO 전략을 고려하세요.'
-                                : '앱 스토어(Apple/Google) 계정 준비와 심사 가이드라인을 미리 확인해야 합니다.'}
+                            {platform === 'web'
+                                ? t('alerts.webDesc')
+                                : t('alerts.appDesc')}
                         </p>
                     </div>
                 </div>

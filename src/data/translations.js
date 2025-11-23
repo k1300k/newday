@@ -46,13 +46,13 @@ export const translations = {
             }
         },
         items: {
-            p1: "Service Type",
-            p2: "PRD (Planning) Progress",
-            p3: "Target Audience Defined",
-            p4: "Competitor Analysis",
-            p5: "Tech Stack Selection",
-            p6: "Admin/Backoffice Planning",
-            p7: "Social Login Strategy",
+            p1: "Define Service Concept & Target",
+            p2: "Market & Competitor Analysis",
+            p3: "Select Service Type (Web/App)",
+            p4: "Define Core Features (MVP)",
+            p5: "Design Information Architecture (IA)",
+            p6: "Write User Stories",
+            p7: "Plan Admin Dashboard",
             r1: "Figma Design Progress",
             r2: "Logo & Branding Assets",
             r3: "Privacy Policy & Terms",
@@ -130,7 +130,49 @@ export const translations = {
             noLinks: "No links added yet.",
             placeholderNotes: "Record key decisions and meeting minutes here...",
             placeholderPrompts: "Paste useful prompts used for this task..."
-        }
+        },
+        options: {
+            web: "Web Service",
+            mobile: "Mobile App",
+            hybrid: "Hybrid"
+        },
+        alerts: {
+            webTitle: "Web Service Notice",
+            webDesc: "Background location tracking is not supported on Web. Consider PWA support and SEO strategies.",
+            appTitle: "Mobile App Notice",
+            appDesc: "Prepare Apple/Google developer accounts and review app store guidelines in advance."
+        },
+        guides: {
+            p1: { desc: "Define who your users are and what problem you are solving. Use the Value Proposition Canvas to align your product with customer needs." },
+            p2: { desc: "Analyze 3-5 direct competitors. Identify their strengths, weaknesses, and pricing models to find your competitive edge." },
+            p3: { desc: "Choose the right platform based on your target audience and budget. Web is faster to launch; Apps offer better engagement." },
+            p4: { desc: "List all features and prioritize them using the MoSCoW method (Must have, Should have, Could have, Won't have)." },
+            p5: { desc: "Create a sitemap to organize content and navigation. This ensures a logical flow for your users." },
+            p6: { desc: "Write user stories in the format: 'As a [user], I want to [action], so that [benefit]'." },
+            p7: { desc: "Plan the internal dashboard for managing users, content, and analytics. Don't overlook this!" }
+        },
+        checklist: {
+            title: "Detailed Checklist",
+            addItem: "Add Item",
+            edit: "Edit Item",
+            delete: "Delete Item",
+            cancel: "Cancel",
+            placeholder: "Enter new item...",
+            checkbox: "Checkbox",
+            percentage: "Percentage (%)",
+            select: "Select Option",
+            reference: "View Reference / Example",
+            guideTitle: "Usage Examples",
+            progressTitle: "Progress Management",
+            ref: {
+                valueProp: "Value Proposition Canvas",
+                competitorAnalysis: "Competitive Analysis Template",
+                webVsNative: "Web vs Native vs Hybrid",
+                mvpGuide: "MVP Guide",
+                iaGuide: "IA for Beginners",
+                userStories: "User Stories with Gherkin"
+            }
+        },
     },
     ko: {
         appTitle: "바이브 파일럿",
@@ -158,7 +200,17 @@ export const translations = {
             checkbox: "체크박스",
             percentage: "진행률 (%)",
             select: "옵션 선택",
-            reference: "참고 자료 / 예시 보기"
+            reference: "참고 자료 / 예시 보기",
+            guideTitle: "활용 예시",
+            progressTitle: "진도 관리",
+            ref: {
+                valueProp: "가치 제안 캔버스",
+                competitorAnalysis: "경쟁사 분석 템플릿",
+                webVsNative: "웹 vs 네이티브 vs 하이브리드",
+                mvpGuide: "MVP 가이드",
+                iaGuide: "초보자를 위한 IA(정보구조) 설계",
+                userStories: "User Stories 작성법 (Gherkin)"
+            }
         },
         phases: {
             1: {
@@ -179,13 +231,13 @@ export const translations = {
             }
         },
         items: {
-            p1: "서비스 형태 선택",
-            p2: "기획안(PRD) 작성 진행률",
-            p3: "타겟 사용자 정의",
-            p4: "경쟁사 분석",
-            p5: "기술 스택 선정",
-            p6: "관리자(Admin) 페이지 기획",
-            p7: "소셜 로그인 전략",
+            p1: "서비스 컨셉 및 타겟 정의",
+            p2: "시장 조사 및 경쟁사 분석",
+            p3: "서비스 형태 선택 (웹/앱)",
+            p4: "핵심 기능 정의 (MVP)",
+            p5: "정보 구조(IA) 설계",
+            p6: "사용자 스토리 작성",
+            p7: "관리자(Admin) 페이지 기획",
             r1: "Figma 디자인 진행률",
             r2: "로고 및 브랜딩 자산",
             r3: "개인정보처리방침 및 약관",
@@ -263,6 +315,26 @@ export const translations = {
             noLinks: "등록된 링크가 없습니다.",
             placeholderNotes: "주요 의사결정 사항이나 회의 내용을 기록하세요...",
             placeholderPrompts: "이 작업에 사용된 유용한 프롬프트를 기록하세요..."
+        },
+        options: {
+            web: "웹 서비스",
+            mobile: "모바일 앱",
+            hybrid: "하이브리드"
+        },
+        alerts: {
+            webTitle: "웹 서비스 알림",
+            webDesc: "웹에서는 백그라운드 위치 추적이 불가능합니다. PWA 지원 여부와 SEO 전략을 고려하세요.",
+            appTitle: "모바일 앱 알림",
+            appDesc: "앱 스토어(Apple/Google) 계정 준비와 심사 가이드라인을 미리 확인해야 합니다."
+        },
+        guides: {
+            p1: { desc: "사용자가 누구이며 어떤 문제를 해결하는지 정의하세요. 가치 제안 캔버스를 사용하여 제품과 고객의 니즈를 일치시키세요." },
+            p2: { desc: "3-5개의 직접 경쟁사를 분석하세요. 그들의 강점, 약점, 가격 모델을 파악하여 경쟁 우위를 찾으세요." },
+            p3: { desc: "타겟 고객과 예산에 맞춰 플랫폼을 선택하세요. 웹은 출시가 빠르고, 앱은 사용자 참여도가 높습니다." },
+            p4: { desc: "모든 기능을 나열하고 MoSCoW 방법(Must, Should, Could, Won't)을 사용하여 우선순위를 정하세요." },
+            p5: { desc: "사이트맵을 작성하여 콘텐츠와 탐색 구조를 정리하세요. 이는 사용자의 논리적인 흐름을 보장합니다." },
+            p6: { desc: "사용자 스토리는 '사용자로서 [행동]을 하여 [이익]을 얻고 싶다' 형식으로 작성하세요." },
+            p7: { desc: "사용자, 콘텐츠, 통계를 관리할 내부 관리자 페이지를 기획하세요. 이 부분을 간과하면 운영이 힘들어집니다!" }
         }
     }
 };
