@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
-import { Menu, BookOpen, Globe } from 'lucide-react';
+import { Menu, BookOpen, Globe, Rocket, Settings } from 'lucide-react';
 import Sidebar from './Sidebar';
 import NavContent from './NavContent';
 import ProgramInfoModal from './ProgramInfoModal';
+import ProjectRegistrationModal from './ProjectRegistrationModal';
 import { useLanguage } from '../contexts/LanguageContext';
 
-const DashboardLayout = ({ children, currentView, onSwitchView, totalProgress }) => {
+const DashboardLayout = ({ children, currentView, onSwitchView, totalProgress, projectInfo, onUpdateProjectInfo }) => {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isInfoOpen, setIsInfoOpen] = useState(false);
+    const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
     const { language, toggleLanguage, t } = useLanguage();
 
     return (
@@ -43,7 +45,9 @@ const DashboardLayout = ({ children, currentView, onSwitchView, totalProgress })
             <main className="flex-1 flex flex-col min-w-0">
                 {/* Header */}
                 <header className="bg-white border-b border-slate-200 sticky top-0 z-30 px-6 py-4 flex justify-between items-center md:hidden">
-                    <div className="font-bold text-lg text-slate-900">{t('appTitle')}</div>
+                    <div className="font-bold text-lg text-slate-900">
+                        {projectInfo?.name || t('appTitle')}
+                    </div>
                     <div className="flex items-center gap-2">
                         <button
                             onClick={toggleLanguage}
@@ -63,6 +67,18 @@ const DashboardLayout = ({ children, currentView, onSwitchView, totalProgress })
                 {/* Desktop Header Actions (Absolute) */}
                 <div className="hidden md:flex absolute top-6 right-8 z-40 gap-3">
                     <button
+                        onClick={() => setIsProjectModalOpen(true)}
+                        className={`flex items-center gap-2 px-4 py-2 rounded-full shadow-sm text-sm font-medium transition-all
+                            ${projectInfo?.status === 'active'
+                                ? 'bg-white border border-slate-200 text-slate-600 hover:text-indigo-600 hover:border-indigo-200'
+                                : 'bg-indigo-600 text-white hover:bg-indigo-700 hover:shadow-md'}
+                        `}
+                    >
+                        {projectInfo?.status === 'active' ? <Settings size={16} /> : <Rocket size={16} />}
+                        <span>{projectInfo?.status === 'active' ? t('project.settings') : t('project.register')}</span>
+                    </button>
+
+                    <button
                         onClick={toggleLanguage}
                         className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-full shadow-sm text-sm font-medium text-slate-600 hover:text-indigo-600 hover:border-indigo-200 transition-all"
                     >
@@ -81,6 +97,17 @@ const DashboardLayout = ({ children, currentView, onSwitchView, totalProgress })
                 {/* Mobile Header Actions (Inline) */}
                 <div className="md:hidden px-6 pt-4 flex justify-end gap-2">
                     <button
+                        onClick={() => setIsProjectModalOpen(true)}
+                        className={`flex items-center gap-2 px-3 py-1.5 rounded-full shadow-sm text-xs font-medium transition-all
+                            ${projectInfo?.status === 'active'
+                                ? 'bg-white border border-slate-200 text-slate-600'
+                                : 'bg-indigo-600 text-white'}
+                        `}
+                    >
+                        {projectInfo?.status === 'active' ? <Settings size={14} /> : <Rocket size={14} />}
+                        <span>{projectInfo?.status === 'active' ? t('project.settings') : t('project.register')}</span>
+                    </button>
+                    <button
                         onClick={() => setIsInfoOpen(true)}
                         className="flex items-center gap-2 px-3 py-1.5 bg-white border border-slate-200 rounded-full shadow-sm text-xs font-medium text-slate-600 hover:text-indigo-600 transition-all"
                     >
@@ -90,14 +117,29 @@ const DashboardLayout = ({ children, currentView, onSwitchView, totalProgress })
                 </div>
 
                 <div className="p-6 md:p-12 max-w-7xl mx-auto w-full">
+                    {/* Project Title Header (Desktop) */}
+                    {projectInfo?.name && (
+                        <div className="hidden md:block mb-8">
+                            <h1 className="text-3xl font-bold text-slate-900">{projectInfo.name}</h1>
+                            {projectInfo.description && (
+                                <p className="text-slate-500 mt-2">{projectInfo.description}</p>
+                            )}
+                        </div>
+                    )}
                     {children}
                 </div>
             </main>
 
-            {/* Program Info Modal */}
+            {/* Modals */}
             <ProgramInfoModal
                 isOpen={isInfoOpen}
                 onClose={() => setIsInfoOpen(false)}
+            />
+            <ProjectRegistrationModal
+                isOpen={isProjectModalOpen}
+                onClose={() => setIsProjectModalOpen(false)}
+                projectInfo={projectInfo}
+                onSave={onUpdateProjectInfo}
             />
         </div>
     );

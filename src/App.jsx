@@ -12,13 +12,56 @@ const initialSteps = [
     descKey: 'phases.1.description',
     isCompleted: false,
     items: [
-      { id: 'p1', textKey: 'items.p1', type: 'select', options: ['Web Service', 'Mobile App', 'Hybrid App'], value: '', grade: 'Basic' },
-      { id: 'p2', textKey: 'items.p2', type: 'percentage', value: 0, grade: 'Basic' },
-      { id: 'p3', textKey: 'items.p3', type: 'checkbox', checked: false, grade: 'Basic' },
-      { id: 'p4', textKey: 'items.p4', type: 'checkbox', checked: false, grade: 'Advanced' },
-      { id: 'p5', textKey: 'items.p5', type: 'select', options: ['React/Node', 'Next.js', 'Flutter', 'Native'], value: '', grade: 'Advanced' },
-      { id: 'p6', textKey: 'items.p6', type: 'checkbox', checked: false, grade: 'Advanced' },
-      { id: 'p7', textKey: 'items.p7', type: 'checkbox', checked: false, grade: 'Basic' },
+      {
+        id: 'p1',
+        text: "Select Service Type (Web/App)",
+        textKey: "checklist.platform.serviceType",
+        checked: false,
+        type: 'select',
+        options: ['Web Service', 'Mobile App', 'Hybrid'],
+        value: 'Web Service',
+        grade: 'Basic',
+        refLink: {
+          title: "Web vs Native vs Hybrid",
+          url: "https://www.codecademy.com/article/what-is-hybrid-app-development"
+        }
+      },
+      {
+        id: 'p2',
+        text: "Define Core Features (MVP)",
+        textKey: "checklist.platform.coreFeatures",
+        checked: false,
+        grade: 'Basic',
+        refLink: {
+          title: "MVP Guide",
+          url: "https://www.ycombinator.com/library/4Q-a-minimum-viable-product-is-not-a-product-it-s-a-process"
+        }
+      },
+      {
+        id: 'p3',
+        text: "Analyze Competitors",
+        textKey: "checklist.platform.competitors",
+        checked: false,
+        grade: 'Basic'
+      },
+      {
+        id: 'p4',
+        text: "Write User Stories",
+        textKey: "checklist.platform.userStories",
+        checked: false,
+        grade: 'Advanced',
+        refLink: {
+          title: "User Stories with Gherkin",
+          url: "https://cucumber.io/docs/gherkin/reference/"
+        }
+      },
+      {
+        id: 'p5',
+        text: "Plan Admin Dashboard",
+        textKey: "checklist.platform.admin",
+        checked: false,
+        grade: 'Advanced'
+      },
     ]
   },
   {
@@ -70,15 +113,24 @@ const initialSteps = [
 
 function AppContent() {
   const [steps, setSteps] = useState(() => {
-    const saved = localStorage.getItem('vibe-pilot-steps-v4');
+    const saved = localStorage.getItem('vibe-pilot-steps-v5');
     return saved ? JSON.parse(saved) : initialSteps;
   });
   const [currentStepId, setCurrentStepId] = useState(1);
   const [currentView, setCurrentView] = useState('overview');
 
+  const [projectInfo, setProjectInfo] = useState(() => {
+    const saved = localStorage.getItem('vibe-pilot-project-info');
+    return saved ? JSON.parse(saved) : { name: '', description: '', status: 'planning', startDate: '' };
+  });
+
   useEffect(() => {
-    localStorage.setItem('vibe-pilot-steps-v4', JSON.stringify(steps));
+    localStorage.setItem('vibe-pilot-steps-v5', JSON.stringify(steps));
   }, [steps]);
+
+  useEffect(() => {
+    localStorage.setItem('vibe-pilot-project-info', JSON.stringify(projectInfo));
+  }, [projectInfo]);
 
   const handleStepClick = (id) => {
     setCurrentStepId(id);
@@ -207,6 +259,8 @@ function AppContent() {
       currentView={currentView}
       onSwitchView={setCurrentView}
       totalProgress={totalProgress}
+      projectInfo={projectInfo}
+      onUpdateProjectInfo={setProjectInfo}
     >
       {currentView === 'overview' ? (
         <Overview

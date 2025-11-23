@@ -71,5 +71,20 @@ export const devHistory = [
         ],
         techStack: "Complex State Logic, Data Modeling",
         description: "Added granular progress tracking and populated with practical, real-world checklist data."
+    },
+    {
+        version: "v1.5",
+        date: "2025-11-24",
+        title: "Project Registration & Deliverables",
+        userPrompt: "Allow project registration and attaching deliverables (notes, prompts, links) to items.",
+        features: [
+            "Project Registration Modal",
+            "Deliverables Management (Notes, Prompts, GitHub Links)",
+            "Registration Validation Logic",
+            "Project Status Tracking",
+            "Reference Links for Checklist Items"
+        ],
+        techStack: "Context API, Conditional Rendering, Form Handling",
+        description: "Implemented project lifecycle management, detailed output tracking, and reference materials."
     }
 ];

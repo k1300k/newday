@@ -18,14 +18,14 @@ export const translations = {
         checklist: {
             title: "Detailed Checklist",
             addItem: "Add Item",
-            edit: "Edit",
-            delete: "Delete",
-            save: "Save",
+            edit: "Edit Item",
+            delete: "Delete Item",
             cancel: "Cancel",
-            placeholder: "Enter item text...",
-            percentage: "Percentage (%)",
+            placeholder: "Enter new item...",
             checkbox: "Checkbox",
-            select: "Select Option"
+            percentage: "Percentage (%)",
+            select: "Select Option",
+            reference: "View Reference / Example"
         },
         phases: {
             1: {
@@ -104,6 +104,32 @@ export const translations = {
             techImpl: "Tech Implementation",
             poweredBy: "Powered by Vibe Coding",
             viewSource: "View Source"
+        },
+        project: {
+            register: "Register Project",
+            settings: "Project Settings",
+            name: "Project Name",
+            description: "Description",
+            startDate: "Start Date",
+            status: "Status",
+            planning: "Planning",
+            active: "In Progress",
+            completed: "Completed",
+            save: "Save Project",
+            placeholderName: "My Awesome Project",
+            placeholderDesc: "Briefly describe your project..."
+        },
+        deliverables: {
+            title: "Deliverables",
+            meetingNotes: "Meeting Notes",
+            prompts: "Prompts",
+            githubLinks: "GitHub Links",
+            addLink: "Add Link",
+            linkUrl: "URL",
+            linkDesc: "Description",
+            noLinks: "No links added yet.",
+            placeholderNotes: "Record key decisions and meeting minutes here...",
+            placeholderPrompts: "Paste useful prompts used for this task..."
         }
     },
     ko: {
@@ -125,14 +151,14 @@ export const translations = {
         checklist: {
             title: "상세 체크리스트",
             addItem: "항목 추가",
-            edit: "수정",
-            delete: "삭제",
-            save: "저장",
+            edit: "항목 수정",
+            delete: "항목 삭제",
             cancel: "취소",
-            placeholder: "항목 내용을 입력하세요...",
-            percentage: "진행률 (%)",
+            placeholder: "새로운 항목 입력...",
             checkbox: "체크박스",
-            select: "옵션 선택"
+            percentage: "진행률 (%)",
+            select: "옵션 선택",
+            reference: "참고 자료 / 예시 보기"
         },
         phases: {
             1: {
@@ -211,6 +237,32 @@ export const translations = {
             techImpl: "기술 구현",
             poweredBy: "Powered by Vibe Coding",
             viewSource: "소스 보기"
+        },
+        project: {
+            register: "프로젝트 등록",
+            settings: "프로젝트 설정",
+            name: "프로젝트명",
+            description: "설명",
+            startDate: "시작일",
+            status: "상태",
+            planning: "기획 중",
+            active: "진행 중",
+            completed: "완료",
+            save: "프로젝트 저장",
+            placeholderName: "나의 멋진 프로젝트",
+            placeholderDesc: "프로젝트에 대한 간단한 설명을 입력하세요..."
+        },
+        deliverables: {
+            title: "산출물 관리",
+            meetingNotes: "회의록",
+            prompts: "프롬프트",
+            githubLinks: "GitHub 링크",
+            addLink: "링크 추가",
+            linkUrl: "URL",
+            linkDesc: "설명",
+            noLinks: "등록된 링크가 없습니다.",
+            placeholderNotes: "주요 의사결정 사항이나 회의 내용을 기록하세요...",
+            placeholderPrompts: "이 작업에 사용된 유용한 프롬프트를 기록하세요..."
         }
     }
 };
