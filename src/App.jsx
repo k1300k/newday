@@ -1,4 +1,3 @@
-```javascript
 import React, { useState, useEffect } from 'react';
 import DashboardLayout from './components/DashboardLayout';
 import Stepper from './components/Stepper';
@@ -135,7 +134,7 @@ function AppContent() {
     setSteps(prevSteps => prevSteps.map(step => {
       if (step.id !== stepId) return step;
       const newItem = {
-        id: `custom - ${ Date.now() } `,
+        id: `custom - ${Date.now()} `,
         text: text, // Custom items won't have textKey
         type: type,
         checked: false,
@@ -225,7 +224,7 @@ function AppContent() {
               <div className="w-48 h-2.5 bg-slate-200 rounded-full overflow-hidden">
                 <div
                   className="h-full bg-indigo-600 transition-all duration-500"
-                  style={{ width: `${ totalProgress }% ` }}
+                  style={{ width: `${totalProgress}% ` }}
                 ></div>
               </div>
               <span className="font-bold text-indigo-600 text-sm">{totalProgress}%</span>
@@ -264,4 +263,3 @@ function App() {
 }
 
 export default App;
-```

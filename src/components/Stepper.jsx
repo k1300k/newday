@@ -1,7 +1,10 @@
 import React from 'react';
 import { Check } from 'lucide-react';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const Stepper = ({ steps, currentStep, onStepClick }) => {
+    const { t } = useLanguage();
+
     return (
         <div className="w-full py-8 px-4">
             <div className="flex items-center justify-between max-w-4xl mx-auto relative">
@@ -37,10 +40,10 @@ const Stepper = ({ steps, currentStep, onStepClick }) => {
                             </div>
                             <span
                                 className={`mt-3 text-xs font-semibold tracking-wide uppercase transition-colors duration-300
-                  ${isActive ? 'text-indigo-600' : 'text-slate-500'}
+                  ${isActive ? 'text-slate-900 font-bold' : 'text-slate-400 font-medium'}
                 `}
                             >
-                                {step.title}
+                                {step.titleKey ? t(step.titleKey) : step.title}
                             </span>
                         </button>
                     );

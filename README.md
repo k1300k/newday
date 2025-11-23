@@ -25,6 +25,7 @@
 - **다양한 입력 타입**: 체크박스, 퍼센트 슬라이더, 드롭다운 선택
 - **커스텀 항목**: 프로젝트에 맞는 항목 자유롭게 추가/수정/삭제
 - **등급 시스템**: Basic(필수) / Advanced(권장) 태그로 우선순위 구분
+- **비주얼 스테퍼**: 단계별 한글/영문 라벨 및 현재 단계 강조 표시
 
 #### 📊 프로젝트 대시보드
 - **실시간 진행률**: 전체 및 단계별 완료율 자동 계산
@@ -232,6 +233,7 @@ Manage **4 major stages** in checklist format, from platform selection to resour
 
 - **Smart Checklists**: Multiple input types (checkbox, percentage slider, dropdown)
 - **Project Dashboard**: Real-time progress tracking with visual feedback
+- **Visual Stepper**: Step-by-step navigation with translated labels and active state indicators
 - **Bilingual Support**: Korean/English with one-click switching
 - **Program Info**: User manual and development history
 - **Data Persistence**: Auto-save to LocalStorage
