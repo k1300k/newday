@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import ReactFlow, {
     Background,
     Controls,
@@ -6,8 +6,9 @@ import ReactFlow, {
     applyEdgeChanges,
 } from 'reactflow';
 import 'reactflow/dist/style.css';
-import { Plus, GitBranch, X } from 'lucide-react';
+import { Plus, GitBranch, X, Trash2 } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
+import useFlowStore from '../stores/flowStore';
 
 // Import custom nodes
 import StartNode from './flow/StartNode';
@@ -25,64 +26,63 @@ const nodeTypes = {
     end: EndNode,
 };
 
-// Initial empty state
-const initialNodes = [];
-const initialEdges = [];
-
 const ServiceFlow = () => {
     const { t } = useLanguage();
-    const [nodes, setNodes] = useState(initialNodes);
-    const [edges, setEdges] = useState(initialEdges);
-    const [showAddMenu, setShowAddMenu] = useState(false);
+    const { nodes, edges, setNodes, setEdges, addNode, clearFlow, loadFromStorage } = useFlowStore();
+    const [showAddMenu, setShowAddMenu] = React.useState(false);
+
+    // Load from storage on mount
+    useEffect(() => {
+        loadFromStorage();
+    }, [loadFromStorage]);
 
     const onNodesChange = useCallback(
-        (changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
-        []
+        (changes) => {
+            const updatedNodes = applyNodeChanges(changes, nodes);
+            setNodes(updatedNodes);
+
+            // Save to localStorage
+            const saved = JSON.parse(localStorage.getItem('vibe-pilot-service-flow') || '{}');
+            localStorage.setItem('vibe-pilot-service-flow', JSON.stringify({
+                ...saved,
+                nodes: updatedNodes
+            }));
+        },
+        [nodes, setNodes]
     );
 
     const onEdgesChange = useCallback(
-        (changes) => setEdges((eds) => applyEdgeChanges(changes, eds)),
-        []
+        (changes) => {
+            const updatedEdges = applyEdgeChanges(changes, edges);
+            setEdges(updatedEdges);
+
+            // Save to localStorage
+            const saved = JSON.parse(localStorage.getItem('vibe-pilot-service-flow') || '{}');
+            localStorage.setItem('vibe-pilot-service-flow', JSON.stringify({
+                ...saved,
+                edges: updatedEdges
+            }));
+        },
+        [edges, setEdges]
     );
 
-    // Add new module
-    const addModule = (type, label) => {
-        const newId = `${type}-${Date.now()}`;
-        const yPosition = nodes.length * 200 + 50; // Vertical spacing
-
-        const newNode = {
-            id: newId,
-            type: type,
-            position: { x: 50, y: yPosition }, // Centered horizontally
-            data: {
-                label: label,
-            },
-        };
-
-        setNodes((nds) => [...nds, newNode]);
-
-        // Auto-connect to previous node
-        if (nodes.length > 0) {
-            const lastNode = nodes[nodes.length - 1];
-            const newEdge = {
-                id: `e${lastNode.id}-${newId}`,
-                source: lastNode.id,
-                target: newId,
-                type: 'straight',
-                animated: true,
-            };
-            setEdges((eds) => [...eds, newEdge]);
-        }
-
+    const handleAddModule = (type, label) => {
+        addNode(type, label);
         setShowAddMenu(false);
     };
 
+    const handleClearFlow = () => {
+        if (confirm('모든 플로우를 삭제하시겠습니까?')) {
+            clearFlow();
+        }
+    };
+
     const moduleOptions = [
-        { type: 'start', label: '시작 (Start)', icon: '🚀', color: 'indigo' },
-        { type: 'auth', label: '인증 (Auth)', icon: '🔒', color: 'emerald' },
-        { type: 'vibeCode', label: '핵심 로직 (Vibe Code)', icon: '✨', color: 'purple' },
-        { type: 'payment', label: '결제 (Payment)', icon: '💳', color: 'blue' },
-        { type: 'end', label: '완료 (End)', icon: '🟢', color: 'green' },
+        { type: 'start', label: '시작 (Start)', icon: '🚀', color: 'indigo', desc: '플로우의 시작점' },
+        { type: 'auth', label: '인증 (Auth)', icon: '🔒', color: 'emerald', desc: '사용자 인증 설정' },
+        { type: 'vibeCode', label: '핵심 로직 (Vibe Code)', icon: '✨', color: 'purple', desc: 'AI 코드 생성' },
+        { type: 'payment', label: '결제 (Payment)', icon: '💳', color: 'blue', desc: '결제 기능 추가' },
+        { type: 'end', label: '완료 (End)', icon: '🟢', color: 'green', desc: '플로우 종료점' },
     ];
 
     return (
@@ -95,10 +95,19 @@ const ServiceFlow = () => {
                             {t('nav.serviceFlow')}
                         </h1>
                         <p className="text-slate-600 mt-1">
-                            단계별로 서비스 플로우를 구성하세요
+                            단계별로 서비스 플로우를 구성하세요 ({nodes.length}개 모듈)
                         </p>
                     </div>
-                    <div className="relative">
+                    <div className="flex items-center gap-2 relative">
+                        {nodes.length > 0 && (
+                            <button
+                                onClick={handleClearFlow}
+                                className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-300 text-slate-700 rounded-lg font-medium hover:bg-slate-50 transition-colors"
+                            >
+                                <Trash2 size={18} />
+                                전체 삭제
+                            </button>
+                        )}
                         <button
                             onClick={() => setShowAddMenu(!showAddMenu)}
                             className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition-colors shadow-sm"
@@ -109,7 +118,7 @@ const ServiceFlow = () => {
 
                         {/* Add Menu Dropdown */}
                         {showAddMenu && (
-                            <div className="absolute right-0 mt-2 w-72 bg-white rounded-xl shadow-2xl border border-slate-200 p-2 z-50">
+                            <div className="absolute right-0 top-full mt-2 w-80 bg-white rounded-xl shadow-2xl border border-slate-200 p-2 z-50">
                                 <div className="flex items-center justify-between p-2 border-b border-slate-100 mb-2">
                                     <span className="text-sm font-semibold text-slate-700">
                                         모듈 선택
@@ -121,27 +130,25 @@ const ServiceFlow = () => {
                                         <X size={16} />
                                     </button>
                                 </div>
-                                {moduleOptions.map((module) => (
-                                    <button
-                                        key={module.type}
-                                        onClick={() => addModule(module.type, module.label)}
-                                        className={`w-full flex items-center gap-3 p-3 rounded-lg hover:bg-${module.color}-50 transition-colors text-left border border-transparent hover:border-${module.color}-200`}
-                                    >
-                                        <span className="text-2xl">{module.icon}</span>
-                                        <div>
-                                            <div className="font-medium text-slate-900">
-                                                {module.label}
+                                <div className="space-y-1">
+                                    {moduleOptions.map((module) => (
+                                        <button
+                                            key={module.type}
+                                            onClick={() => handleAddModule(module.type, module.label)}
+                                            className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-slate-50 transition-colors text-left border border-transparent hover:border-slate-200"
+                                        >
+                                            <span className="text-2xl">{module.icon}</span>
+                                            <div className="flex-1">
+                                                <div className="font-medium text-slate-900">
+                                                    {module.label}
+                                                </div>
+                                                <div className="text-xs text-slate-500">
+                                                    {module.desc}
+                                                </div>
                                             </div>
-                                            <div className="text-xs text-slate-500">
-                                                {module.type === 'start' && '플로우의 시작점'}
-                                                {module.type === 'auth' && '사용자 인증 설정'}
-                                                {module.type === 'vibeCode' && 'AI 코드 생성'}
-                                                {module.type === 'payment' && '결제 기능 추가'}
-                                                {module.type === 'end' && '플로우 종료점'}
-                                            </div>
-                                        </div>
-                                    </button>
-                                ))}
+                                        </button>
+                                    ))}
+                                </div>
                             </div>
                         )}
                     </div>
