@@ -468,7 +468,7 @@ function AppContent() {
           onPhaseClick={handleStepClick}
         />
       ) : currentView === 'serviceFlow' ? (
-        <ServiceFlow />
+        <ServiceFlow steps={steps} setSteps={setSteps} />
       ) : (
         <div className="animate-fade-in">
           <div className="mb-8 text-center md:hidden">

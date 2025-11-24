@@ -26,7 +26,7 @@ const nodeTypes = {
     end: EndNode,
 };
 
-const ServiceFlow = () => {
+const ServiceFlow = ({ steps, setSteps }) => {
     const { t } = useLanguage();
     const { nodes, edges, setNodes, setEdges, addNode, clearFlow, loadFromStorage } = useFlowStore();
     const [showAddMenu, setShowAddMenu] = React.useState(false);
@@ -77,6 +77,91 @@ const ServiceFlow = () => {
         }
     };
 
+    // Load from checklist (Phase 5)
+    const loadFromChecklist = () => {
+        if (!steps || steps.length < 5) {
+            alert('체크리스트 데이터가 없습니다.');
+            return;
+        }
+
+        const phase5 = steps.find(step => step.id === 5);
+        if (!phase5) {
+            alert('Phase 5 (Service Flow) 데이터를 찾을 수 없습니다.');
+            return;
+        }
+
+        const newNodes = [];
+        const newEdges = [];
+        let yPos = 50;
+
+        phase5.items.forEach((item, index) => {
+            let nodeType = 'start';
+
+            // Map checklist items to node types
+            if (item.id === 's1') nodeType = 'start';
+            else if (item.id === 's2') nodeType = 'auth';
+            else if (item.id === 's3') nodeType = 'vibeCode';
+            else if (item.id === 's4') nodeType = 'payment';
+            else if (item.id === 's5') nodeType = 'conditional';
+            else if (item.id === 's6') nodeType = 'end';
+
+            const nodeId = `${nodeType}-${item.id}`;
+            newNodes.push({
+                id: nodeId,
+                type: nodeType,
+                position: { x: 50, y: yPos },
+                data: { label: t(`items.${item.id}`), checked: item.checked || false },
+            });
+
+            // Connect to previous node
+            if (index > 0) {
+                const prevNodeId = newNodes[index - 1].id;
+                newEdges.push({
+                    id: `e${index}`,
+                    source: prevNodeId,
+                    target: nodeId,
+                    type: 'straight',
+                    animated: true,
+                });
+            }
+
+            yPos += 200;
+        });
+
+        setNodes(newNodes);
+        setEdges(newEdges);
+
+        // Save to localStorage
+        localStorage.setItem('vibe-pilot-service-flow', JSON.stringify({ nodes: newNodes, edges: newEdges }));
+        alert('체크리스트에서 불러왔습니다!');
+    };
+
+    // Send to checklist (Phase 5)
+    const sendToChecklist = () => {
+        if (!steps || steps.length < 5 || !setSteps) {
+            alert('체크리스트를 업데이트할 수 없습니다.');
+            return;
+        }
+
+        const updatedSteps = steps.map(step => {
+            if (step.id === 5) {
+                const updatedItems = step.items.map(item => {
+                    // Find corresponding node
+                    const node = nodes.find(n => n.id.includes(item.id));
+                    if (node) {
+                        return { ...item, checked: true }; // Mark as checked if node exists
+                    }
+                    return item;
+                });
+                return { ...step, items: updatedItems };
+            }
+            return step;
+        });
+
+        setSteps(updatedSteps);
+        alert('체크리스트로 전달했습니다!');
+    };
+
     const moduleOptions = [
         { type: 'start', label: '시작 (Start)', icon: '🚀', color: 'indigo', desc: '플로우의 시작점' },
         { type: 'auth', label: '인증 (Auth)', icon: '🔒', color: 'emerald', desc: '사용자 인증 설정' },
@@ -99,6 +184,18 @@ const ServiceFlow = () => {
                         </p>
                     </div>
                     <div className="flex items-center gap-2 relative">
+                        <button
+                            onClick={loadFromChecklist}
+                            className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-colors"
+                        >
+                            📥 체크리스트 불러오기
+                        </button>
+                        <button
+                            onClick={sendToChecklist}
+                            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors"
+                        >
+                            📤 체크리스트로 전달
+                        </button>
                         {nodes.length > 0 && (
                             <button
                                 onClick={handleClearFlow}
