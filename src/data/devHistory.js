@@ -86,5 +86,40 @@ export const devHistory = [
         ],
         techStack: "Context API, Conditional Rendering, Form Handling",
         description: "Implemented project lifecycle management, detailed output tracking, and reference materials."
+    },
+    {
+        version: "v1.6",
+        date: "2025-11-24",
+        title: "Data Export/Import & Cloud Sync",
+        userPrompt: "Add JSON export/import and cloud synchronization with Firebase.",
+        features: [
+            "JSON Export (Download Backup)",
+            "JSON Import (Restore from File)",
+            "Quick Save Button",
+            "Firebase Cloud Storage Integration",
+            "Project ID Generation & Sharing",
+            "Cross-browser Data Access",
+            "LocalStorage Persistence"
+        ],
+        techStack: "Firebase Storage, FileReader API, Blob, URL Generation",
+        description: "Added data backup/restore capabilities and cloud synchronization for cross-device access."
+    },
+    {
+        version: "v1.7",
+        date: "2025-11-25",
+        title: "Service Flow Builder",
+        userPrompt: "Create a vertical flow builder like Opal/n8n but with New Day style cards.",
+        features: [
+            "5 Custom Node Types (Start, Auth, Vibe Code, Payment, End)",
+            "New Day Style Card Design",
+            "React Flow Integration",
+            "Zustand State Management",
+            "Auto-connect Nodes Vertically",
+            "LocalStorage Auto-save",
+            "Module Addition Dropdown Menu",
+            "Flow Clear Function"
+        ],
+        techStack: "React Flow, Zustand, Custom Node Components",
+        description: "Implemented a vertical flow builder for service architecture design with automatic node connection and state persistence."
     }
 ];
