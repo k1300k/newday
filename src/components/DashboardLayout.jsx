@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
-import { Menu, BookOpen, Globe, Rocket, Settings, Download, Upload, Save } from 'lucide-react';
+import { Menu, BookOpen, Globe, Rocket, Settings, Download, Upload, Save, Cloud } from 'lucide-react';
 import Sidebar from './Sidebar';
 import NavContent from './NavContent';
 import ProgramInfoModal from './ProgramInfoModal';
 import ProjectRegistrationModal from './ProjectRegistrationModal';
+import CloudSyncModal from './CloudSyncModal';
 import { useLanguage } from '../contexts/LanguageContext';
 
-const DashboardLayout = ({ children, currentView, onSwitchView, totalProgress, projectInfo, onUpdateProjectInfo, onExportData, onImportData }) => {
+const DashboardLayout = ({ children, currentView, onSwitchView, totalProgress, projectInfo, onUpdateProjectInfo, onExportData, onImportData, onCloudSave, onCloudLoad, isFirebaseConfigured }) => {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isInfoOpen, setIsInfoOpen] = useState(false);
     const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
+    const [isCloudSyncOpen, setIsCloudSyncOpen] = useState(false);
     const { language, toggleLanguage, t } = useLanguage();
 
     const handleExport = () => {
@@ -156,6 +158,16 @@ const DashboardLayout = ({ children, currentView, onSwitchView, totalProgress, p
                         <Upload size={16} />
                         <span>{t('header.import')}</span>
                     </button>
+                    {isFirebaseConfigured && (
+                        <button
+                            onClick={() => setIsCloudSyncOpen(true)}
+                            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-full shadow-sm text-sm font-medium hover:bg-blue-700 transition-all"
+                            title="Cloud Sync"
+                        >
+                            <Cloud size={16} />
+                            <span>Cloud Sync</span>
+                        </button>
+                    )}
                 </div>
 
                 {/* Mobile Header Actions (Inline) */}
@@ -222,6 +234,12 @@ const DashboardLayout = ({ children, currentView, onSwitchView, totalProgress, p
                 onClose={() => setIsProjectModalOpen(false)}
                 projectInfo={projectInfo}
                 onSave={onUpdateProjectInfo}
+            />
+            <CloudSyncModal
+                isOpen={isCloudSyncOpen}
+                onClose={() => setIsCloudSyncOpen(false)}
+                onCloudSave={onCloudSave}
+                onCloudLoad={onCloudLoad}
             />
         </div>
     );

@@ -4,6 +4,8 @@ import Stepper from './components/Stepper';
 import StepCard from './components/StepCard';
 import Overview from './components/Overview';
 import { LanguageProvider } from './contexts/LanguageContext';
+import { saveToCloud, loadFromCloud, isFirebaseConfigured } from './utils/cloudSync';
+import ServiceFlow from './components/ServiceFlow';
 
 const initialSteps = [
   {
@@ -256,6 +258,54 @@ function AppContent() {
     }
   };
 
+  // Cloud Save
+  const handleCloudSave = async (projectId) => {
+    if (!isFirebaseConfigured()) {
+      throw new Error('Firebase is not configured. Please check firebase.js config file.');
+    }
+
+    const dataToSave = {
+      version: '1.0.0',
+      exportedAt: new Date().toISOString(),
+      projectInfo: projectInfo,
+      steps: steps
+    };
+
+    try {
+      await saveToCloud(projectId, dataToSave);
+      // Store project ID in localStorage for easy access
+      localStorage.setItem('vibe-pilot-cloud-project-id', projectId);
+      return true;
+    } catch (error) {
+      console.error('Cloud save error:', error);
+      throw error;
+    }
+  };
+
+  // Cloud Load
+  const handleCloudLoad = async (projectId) => {
+    if (!isFirebaseConfigured()) {
+      throw new Error('Firebase is not configured. Please check firebase.js config file.');
+    }
+
+    try {
+      const data = await loadFromCloud(projectId);
+
+      // Use importData to update the application state
+      const success = importData(data);
+
+      if (success) {
+        // Store project ID in localStorage
+        localStorage.setItem('vibe-pilot-cloud-project-id', projectId);
+      }
+
+      return success;
+    } catch (error) {
+      console.error('Cloud load error:', error);
+      throw error;
+    }
+  };
+
   const handleStepClick = (id) => {
     setCurrentStepId(id);
     setCurrentView('workflow');
@@ -393,6 +443,9 @@ function AppContent() {
       onUpdateProjectInfo={setProjectInfo}
       onExportData={exportData}
       onImportData={importData}
+      onCloudSave={handleCloudSave}
+      onCloudLoad={handleCloudLoad}
+      isFirebaseConfigured={isFirebaseConfigured()}
     >
       {currentView === 'overview' ? (
         <Overview
@@ -400,6 +453,8 @@ function AppContent() {
           totalProgress={totalProgress}
           onPhaseClick={handleStepClick}
         />
+      ) : currentView === 'serviceFlow' ? (
+        <ServiceFlow />
       ) : (
         <div className="animate-fade-in">
           <div className="mb-8 text-center md:hidden">

@@ -1,5 +1,5 @@
 import React from 'react';
-import { LayoutDashboard, CheckSquare } from 'lucide-react';
+import { LayoutDashboard, CheckSquare, GitBranch } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 
 const NavContent = ({ currentView, onSwitchView }) => {
@@ -28,6 +28,18 @@ const NavContent = ({ currentView, onSwitchView }) => {
             >
                 <CheckSquare size={20} />
                 {t('nav.checklist')}
+            </button>
+
+            <button
+                onClick={() => onSwitchView('serviceFlow')}
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200
+                    ${currentView === 'serviceFlow'
+                        ? 'bg-indigo-50 text-indigo-700 shadow-sm ring-1 ring-indigo-200'
+                        : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'}
+                `}
+            >
+                <GitBranch size={20} />
+                {t('nav.serviceFlow')}
             </button>
         </nav>
     );

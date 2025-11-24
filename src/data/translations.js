@@ -4,6 +4,7 @@ export const translations = {
         nav: {
             overview: "Project Status",
             checklist: "Detailed Checklist",
+            serviceFlow: "Service Flow",
             programInfo: "Program Info",
             info: "Info"
         },
@@ -195,6 +196,7 @@ export const translations = {
         nav: {
             overview: "프로젝트 현황",
             checklist: "상세 체크리스트",
+            serviceFlow: "단계별 구성",
             programInfo: "프로그램 정보",
             info: "정보"
         },
