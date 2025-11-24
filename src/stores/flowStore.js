@@ -1,9 +1,49 @@
 import { create } from 'zustand';
 
+const defaultNodes = [
+    {
+        id: 'start-default',
+        type: 'start',
+        position: { x: 50, y: 50 },
+        data: { label: '시작 (Start)', serviceName: '', landingUrl: '' },
+    },
+    {
+        id: 'auth-default',
+        type: 'auth',
+        position: { x: 50, y: 250 },
+        data: { label: '🔒 인증 (Auth)', google: false, kakao: false, email: false },
+    },
+    {
+        id: 'vibeCode-default',
+        type: 'vibeCode',
+        position: { x: 50, y: 450 },
+        data: { label: '✨ 핵심 로직 (Vibe Code)', prompt: '' },
+    },
+    {
+        id: 'payment-default',
+        type: 'payment',
+        position: { x: 50, y: 650 },
+        data: { label: '💳 결제 (Payment)', provider: 'toss', amount: '' },
+    },
+    {
+        id: 'end-default',
+        type: 'end',
+        position: { x: 50, y: 850 },
+        data: { label: '🟢 완료 (End)', successUrl: '' },
+    },
+];
+
+const defaultEdges = [
+    { id: 'e1', source: 'start-default', target: 'auth-default', type: 'straight', animated: true },
+    { id: 'e2', source: 'auth-default', target: 'vibeCode-default', type: 'straight', animated: true },
+    { id: 'e3', source: 'vibeCode-default', target: 'payment-default', type: 'straight', animated: true },
+    { id: 'e4', source: 'payment-default', target: 'end-default', type: 'straight', animated: true },
+];
+
 const useFlowStore = create((set, get) => ({
     // Flow state
-    nodes: [],
-    edges: [],
+    nodes: defaultNodes,
+    edges: defaultEdges,
 
     // Actions
     setNodes: (nodes) => set({ nodes }),
@@ -77,10 +117,14 @@ const useFlowStore = create((set, get) => ({
         if (saved) {
             try {
                 const { nodes, edges } = JSON.parse(saved);
-                set({ nodes: nodes || [], edges: edges || [] });
+                set({ nodes: nodes || defaultNodes, edges: edges || defaultEdges });
             } catch (error) {
                 console.error('Failed to load flow from storage:', error);
+                set({ nodes: defaultNodes, edges: defaultEdges });
             }
+        } else {
+            // If no saved data, use defaults
+            set({ nodes: defaultNodes, edges: defaultEdges });
         }
     },
 }));
