@@ -60,6 +60,10 @@ export const translations = {
             4: {
                 title: "Launch",
                 description: "Final testing and deployment."
+            },
+            5: {
+                title: "Service Flow",
+                description: "Design service architecture and flow."
             }
         },
         items: {
@@ -90,7 +94,13 @@ export const translations = {
             l4: "Production Deployment",
             l5: "Post-Launch Monitoring",
             l6: "404 Error Page",
-            l7: "Google Search Console Registration"
+            l7: "Google Search Console Registration",
+            s1: "Define Service Start Point (Landing Page)",
+            s2: "Configure Authentication (Google/Kakao/Email)",
+            s3: "Design Core Logic with AI (Vibe Coding)",
+            s4: "Integrate Payment Gateway (Toss/Stripe)",
+            s5: "Set Conditional Flows (If/Else Logic)",
+            s6: "Define Service End Point (Success Page)"
         },
         grades: {
             Basic: "Basic",
@@ -260,8 +270,12 @@ export const translations = {
                 description: "개발 환경 설정 및 협업 준비"
             },
             4: {
-                title: "출시 준비",
-                description: "최종 테스트 및 배포"
+                title: "런칭 (Launch)",
+                description: "최종 테스트 및 배포."
+            },
+            5: {
+                title: "단계별 구성 (Service Flow)",
+                description: "서비스 아키텍처 및 플로우 설계."
             }
         },
         items: {
@@ -292,7 +306,13 @@ export const translations = {
             l4: "실서버 배포",
             l5: "출시 후 모니터링",
             l6: "404 에러 페이지",
-            l7: "구글 서치 콘솔 등록"
+            l7: "구글 서치 콘솔 등록",
+            s1: "서비스 시작점 정의 (랜딩 페이지)",
+            s2: "인증 방식 설정 (Google/Kakao/Email)",
+            s3: "AI로 핵심 로직 설계 (Vibe Coding)",
+            s4: "결제 게이트웨이 연동 (Toss/Stripe)",
+            s5: "조건부 플로우 설정 (If/Else 로직)",
+            s6: "서비스 종료점 정의 (성공 페이지)"
         },
         grades: {
             Basic: "기본",

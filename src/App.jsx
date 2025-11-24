@@ -186,12 +186,26 @@ const initialSteps = [
       { id: 'l6', textKey: 'items.l6', type: 'checkbox', checked: false, grade: 'Basic' },
       { id: 'l7', textKey: 'items.l7', type: 'checkbox', checked: false, grade: 'Advanced' },
     ]
+  },
+  {
+    id: 5,
+    titleKey: 'phases.5.title',
+    descKey: 'phases.5.description',
+    isCompleted: false,
+    items: [
+      { id: 's1', textKey: 'items.s1', type: 'checkbox', checked: false, grade: 'Basic' },
+      { id: 's2', textKey: 'items.s2', type: 'checkbox', checked: false, grade: 'Basic' },
+      { id: 's3', textKey: 'items.s3', type: 'checkbox', checked: false, grade: 'Advanced' },
+      { id: 's4', textKey: 'items.s4', type: 'checkbox', checked: false, grade: 'Basic' },
+      { id: 's5', textKey: 'items.s5', type: 'checkbox', checked: false, grade: 'Advanced' },
+      { id: 's6', textKey: 'items.s6', type: 'checkbox', checked: false, grade: 'Basic' },
+    ]
   }
 ];
 
 function AppContent() {
   const [steps, setSteps] = useState(() => {
-    const saved = localStorage.getItem('vibe-pilot-steps-v9');
+    const saved = localStorage.getItem('vibe-pilot-steps-v10');
     return saved ? JSON.parse(saved) : initialSteps;
   });
   const [currentStepId, setCurrentStepId] = useState(1);
@@ -203,7 +217,7 @@ function AppContent() {
   });
 
   useEffect(() => {
-    localStorage.setItem('vibe-pilot-steps-v9', JSON.stringify(steps));
+    localStorage.setItem('vibe-pilot-steps-v10', JSON.stringify(steps));
   }, [steps]);
 
   useEffect(() => {
@@ -248,7 +262,7 @@ function AppContent() {
       setProjectInfo(jsonData.projectInfo);
 
       // Also update localStorage immediately
-      localStorage.setItem('vibe-pilot-steps-v9', JSON.stringify(jsonData.steps));
+      localStorage.setItem('vibe-pilot-steps-v10', JSON.stringify(jsonData.steps));
       localStorage.setItem('vibe-pilot-project-info', JSON.stringify(jsonData.projectInfo));
 
       return true;
